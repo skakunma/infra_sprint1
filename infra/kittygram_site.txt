@@ -1,0 +1,5 @@
+IP: 89.169.173.5;
+name_taski: https://skakuntaski.zapto.org;
+name_kittygram: https://skakun.zapto.org;
+login: admin;
+password: admin;

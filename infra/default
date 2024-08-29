@@ -1,0 +1,40 @@
+server {
+    server_name skakun.zapto.org 89.169.173.5;
+
+    # Обработка запросов к /api/ с проксированием на Gunicorn
+    location /api/ {
+        proxy_pass http://127.0.0.1:8080;
+    }
+
+    # Обработка запросов к /media/ для статических файлов
+    location /media/ {
+        alias /var/www/kittygram/media/;  # Указывает на директорию, откуда будут браться файлы
+        autoindex on;  # Включает автоматическую индексацию (опционально)
+    }
+
+    # Обработка всех остальных запросов
+    location / {
+        root   /var/www/kittygram;
+        index  index.html index.htm;
+        try_files $uri /index.html;
+    }
+
+    listen 443 ssl; # managed by Certbot
+    ssl_certificate /etc/letsencrypt/live/skakun.zapto.org/fullchain.pem; # managed by Certbot
+    ssl_certificate_key /etc/letsencrypt/live/skakun.zapto.org/privkey.pem; # managed by Certbot
+    include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
+    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
+
+}
+server {
+    if ($host = skakun.zapto.org) {
+        return 301 https://$host$request_uri;
+    } # managed by Certbot
+
+
+    listen 80;
+    server_name skakun.zapto.org 89.169.173.5;
+    return 404; # managed by Certbot
+
+
+}
